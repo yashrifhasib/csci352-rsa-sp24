@@ -21,4 +21,3 @@ def prime_factors_of(number):
 		else:
 			divisor += 1
 	return prime_factors
-
