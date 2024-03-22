@@ -1,1 +1,1 @@
-# csci352-RSA-SP24
+# CSCI 352 RSA Group of Spring 2024
