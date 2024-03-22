@@ -9,5 +9,3 @@ def factor(number):
         return [1, number]
     factors.append(number)
     return factors;
-
-print(factor(9))
