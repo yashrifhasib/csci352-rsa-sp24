@@ -1,16 +1,5 @@
 from random import randint
-
-def factor(num):
-    count = 0
-    factors = [1]
-    for i in range(2, int(num / 2)):
-        if num % i == 0:
-            count += 1
-            factors.append(i)
-    if count == 0:
-        return [1, num]
-    factors.append(num)
-    return factors;
+import math
 
 def prime_factors_of(number):
 	divisor = 2
@@ -57,3 +46,21 @@ def is_prime(number):
         if not is_prime_helper(number):
             return False
     return True
+
+def pollard_rho_helper(value, exponent, constant, n):
+    var_i = (value**exponent + constant) % n
+    return var_i
+
+def pollard_rho(n, x0, y0, fx_constant, fx_exponent=2):
+    # assuming the f(x) = x**2 + 4
+    xi = pollard_rho_helper(x0, fx_exponent, fx_constant, n)
+    yi = pollard_rho_helper(pollard_rho_helper(x0, fx_exponent, fx_constant, n), 2, fx_constant, n)
+    possible_factors = [1]
+    while possible_factors[0] == 1:
+        xi = pollard_rho_helper(xi, fx_exponent, fx_constant, n)
+        yi = pollard_rho_helper(pollard_rho_helper(yi, fx_exponent, fx_constant, n), fx_exponent, fx_constant, n)
+        # print(str(xi) + " " + str(yi))
+        possible_factors[0] = math.gcd(abs(xi-yi), n)
+    n //= possible_factors[0]
+    possible_factors.append(n)
+    return possible_factors
