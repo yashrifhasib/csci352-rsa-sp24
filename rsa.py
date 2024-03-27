@@ -52,7 +52,6 @@ def pollard_rho_helper(value, exponent, constant, n):
     return var_i
 
 def pollard_rho(n, x0, y0, fx_constant, fx_exponent=2):
-    # assuming the f(x) = x**2 + 4
     xi = pollard_rho_helper(x0, fx_exponent, fx_constant, n)
     yi = pollard_rho_helper(pollard_rho_helper(x0, fx_exponent, fx_constant, n), 2, fx_constant, n)
     possible_factors = [1]
