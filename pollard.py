@@ -27,4 +27,6 @@ def pollard_rho(number: int, g=None):
 
 if __name__ == '__main__':
     n = 9209839122440374002906008377605580208264841025166426304451583112053
-    print(pollard_rho(n))
+    rho = pollard_rho(n)
+    print("factor of n is: ", rho)
+    print("if blank, pollard failed")
