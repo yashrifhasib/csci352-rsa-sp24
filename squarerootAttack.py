@@ -33,6 +33,8 @@ def sqrtAttack(n):
 
 if __name__ == '__main__':
     n = 9209839122440374002906008377605580208264841025166426304451583112053
-    print(n)
-    sqrtAttack(n)
+    m = real_sqrt(n)
+    c = (m)**2-n
+    c_sqrt = real_sqrt(c)-1
+    print((m-c_sqrt)*(m+c_sqrt)-n,c_sqrt)
 
