@@ -1,8 +1,9 @@
 import sys
 from euclid import gcd
 from rsa import is_prime
+from random import randrange
 
-def pollard_rho(number, g=None):
+def pollard_rho(number: int, g=None):
     if is_prime(number):
         return None
     b = 0
@@ -12,7 +13,7 @@ def pollard_rho(number, g=None):
     if g is None:
         g = base_g
     
-    x = 2
+    x = randrange(2,number)
     y = x
     d = 1
     while d == 1:

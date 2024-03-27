@@ -4,7 +4,7 @@ def gcd(large, small):
     large = abs(large)
     small = abs(small)
     if large == small:
-        return 1
+        return large
     if large < small:
         temp = large
         large = small
