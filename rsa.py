@@ -41,8 +41,8 @@ def is_prime_helper(n):
                 return True
     return False
 
-def is_prime(number):
-    for x in range(500):
+def is_prime(number, test_count=5):
+    for x in range(test_count):
         if not is_prime_helper(number):
             return False
     return True
