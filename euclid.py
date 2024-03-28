@@ -1,19 +1,13 @@
 
 
-def gcd(large, small):
-    large = abs(large)
-    small = abs(small)
-    if large == small:
-        return large
+def gcd(num1, num2):
+    large = abs(num1)
+    small = abs(num2)
     if large < small:
-        temp = large
-        large = small
-        small = temp
-    while large % small > 0:
-        remainder = large % small
-        large = small
-        small = remainder
-    return small
+        large, small = small, large
+    while small > 0:
+        large, small = small, large % small
+    return large
 
 if __name__ == '__main__':
     print(15,4,gcd(15,4))
