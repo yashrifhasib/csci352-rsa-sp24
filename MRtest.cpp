@@ -6,6 +6,11 @@
 
 using namespace std;
 
+#include "MRtest.h"
+
+//g++ -o MRtest MRtest.cpp -I/opt/homebrew/Cellar/gmp/6.3.0/include/ -L/opt/homebrew/Cellar/gmp/6.3.0/lib/  -lgmp -lgmpxx
+
+
 bool MB_failure(const mpz_class& a, const mpz_class& b, const mpz_class&k, const mpz_class& n){
     //return true with MB_test failed, number is not a prime
 
@@ -54,16 +59,5 @@ bool MR_Test(const mpz_class& num){
         }
     }
     return true;
-
-}
-
-//g++ -o MRtest MRtest.cpp -I/opt/homebrew/Cellar/gmp/6.3.0/include/ -L/opt/homebrew/Cellar/gmp/6.3.0/lib/  -lgmp -lgmpxx
-
-int main() {
-    mpz_class n; // Declare a GMP arbitrary precision integer
-    //where composite n is set to be the string literal
-    n = "9209839122440374002906008377605580208264841025166426304451583112053";
-    cout << n << " " << (MR_Test(n) ? "Prime":"Composite") <<endl;
-
 
 }
