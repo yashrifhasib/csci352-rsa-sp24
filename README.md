@@ -11,3 +11,18 @@ Your operatives have intercepted the encrypted message
     2016279054524078341299256251568889523037078816031686455795312148201129
 
 and now it’s up to you. Recover the critical plaintext.
+
+----------
+Coding in C++
+- installed GMP library online
+  
+GMP official site: https://gmplib.org
+
+
+MacOS download instruction:
+1. get: https://brew.sh
+2. https://conan.io/center/recipes/gmp?version=6.3.0
+
+*video installation tutorial: https://youtu.be/wuKK05cq06E?si=gbtUCFfqXF7RzBAC
+
+*manual instruction: https://gmplib.org/manual/index
