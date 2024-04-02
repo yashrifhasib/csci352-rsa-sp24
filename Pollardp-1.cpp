@@ -11,21 +11,26 @@
 
 using namespace std;
 
-mpz_class gcd(const mpz_class& a, const mpz_class& b){
+mpz_class gcd(const mpz_class& a_, const mpz_class& b_){
 
-    if(a==b){
-        return a;
+    mpz_class a = a_;
+    mpz_class b = b_;
+    while(true){
+        if(a==b){
+            return a;
+        }
+        if(a==0){
+            return b;
+        }
+        if(b==0){
+            return a;
+        }
+        if(a>b){  //directly compares mpz_class objects.
+            a = a%b; 
+        }else{
+            b = b%a;
+        }
     }
-    if(a==0){
-        return b;
-    }
-    if(b==0){
-        return a;
-    }
-    if(a>b){  //directly compares mpz_class objects.
-        return gcd(a%b, b);
-    }
-    return gcd(a, b%a);
 
 
 }
@@ -34,17 +39,25 @@ void pollard(const mpz_class& num){
     mpz_class n = num;
     mpz_class a("2"); // pick 2 to be the coprime number of the factor p
     mpz_class B("2"); // the value for B, the exponent of a
-    cout << n << endl << "Pollard p-1 factoring started: factor = gcd(2^B!-1, n)" << endl;
 
-    while(n != 1){
+    while(true){
+
+        if(n % 2 == 0){
+            cout << 2 << ", ";
+            n=n/2;
+            continue;
+        }
+
+        if(MR_Test(n))
+            break;
+
         mpz_powm(a.get_mpz_t(), a.get_mpz_t(), B.get_mpz_t(), n.get_mpz_t());
         mpz_class p(gcd(a-1,n));
+
         if(p!=1 && p!=n){
-            cout << "n divisible by " << p << endl;
-            n = n/p;
-            if(MR_Test(n)){
-                break;
-            }
+            cout << p << ", ";
+            pollard(n/p);
+            return;
         }
         B++;
     }
@@ -61,10 +74,12 @@ int main() {
     time(&start); 
 
     mpz_class n; // Declare a GMP arbitrary precision integer
-    //n = "9209839122440374002906008377605580208264841025166426304451583112053";
-    //where composite n is set to be the string literal
-    n = "18446744073709551617";
+    n = "9209839122440374002906008377605580208264841025166426304451583112053";
+    n = "9999";
 
+    //where composite n is set to be the string literal
+
+    cout << n << endl << "Pollard p-1 factoring started: factor = gcd(2^B!-1, n)" << endl;
     pollard(n);
 
     time(&end); 
