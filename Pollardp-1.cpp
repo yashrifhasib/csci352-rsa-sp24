@@ -3,13 +3,22 @@
 #include <ctime>
 #include <iomanip>
 
-
 #include <cstdlib> 
-
-
 #include "MRtest.h"
 
 using namespace std;
+
+mpz_class coprimeGenerator(const mpz_class& n, int maxBit, gmp_randstate_t state){
+    mpz_class randomBig;
+    while(true){
+        // Generate a random big integer with 1024 bits
+        mpz_urandomb(randomBig.get_mpz_t(), state, maxBit);
+        if(gcd(randomBig, n)==1){
+            return randomBig;
+        }
+    }
+
+}
 
 mpz_class gcd(const mpz_class& a_, const mpz_class& b_){
 
@@ -35,7 +44,7 @@ mpz_class gcd(const mpz_class& a_, const mpz_class& b_){
 
 }
 
-void pollard(const mpz_class& num){
+void pollard(const mpz_class& num, const mpz_class& A){
     mpz_class n = num;
     mpz_class a("2"); // pick 2 to be the coprime number of the factor p
     mpz_class B("2"); // the value for B, the exponent of a
@@ -56,7 +65,7 @@ void pollard(const mpz_class& num){
 
         if(p!=1 && p!=n){
             cout << p << ", ";
-            pollard(n/p);
+            pollard(n/p, A);
             return;
         }
         B++;
@@ -73,14 +82,24 @@ int main() {
     time_t start, end; 
     time(&start); 
 
+
+    gmp_randstate_t state;
+    gmp_randinit_default(state);
+    gmp_randseed_ui(state, time(NULL));
+
+
     mpz_class n; // Declare a GMP arbitrary precision integer
     n = "9209839122440374002906008377605580208264841025166426304451583112053";
-    n = "9999";
+    //67 digits ~ 201 bits (let's generate coprime of n that's less or = 100 bits )
+    mpz_class A = coprimeGenerator(n, 100, state);
+    //A = 2;
+    //need to reasonable fix some B: hoping for B-smooth case
 
     //where composite n is set to be the string literal
 
-    cout << n << endl << "Pollard p-1 factoring started: factor = gcd(2^B!-1, n)" << endl;
-    pollard(n);
+    cout << n << endl << "Pollard p-1 factoring started: factor = gcd(A^B!-1, n)" << endl;
+    cout << "A = " << A << endl;
+    pollard(n, A);
 
     time(&end); 
 
