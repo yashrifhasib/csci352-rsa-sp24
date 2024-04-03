@@ -1,6 +1,8 @@
 from random import randint
 import math
 
+M_R_DEFAULT = 5
+
 def prime_factors_of(number):
 	divisor = 2
 	remaining = number
@@ -41,17 +43,24 @@ def is_prime_helper(n):
                 return True
     return False
 
-def is_prime(number, test_count=5):
+def is_prime(number, test_count=M_R_DEFAULT):
     for x in range(test_count):
         if not is_prime_helper(number):
             return False
     return True
 
-def next_prime(n):
+def next_prime(n, test_count=M_R_DEFAULT):
     if n % 2 == 0:
         n += 1
-    while not is_prime(n):
+    while not is_prime(n, test_count):
         n += 2
+    return n
+
+def prev_prime(n, test_count=M_R_DEFAULT):
+    if n % 2 == 0:
+        n -= 1
+    while not is_prime(n, test_count):
+        n -= 2
     return n
 
 def pollard_rho_helper(value, exponent, constant, n):
