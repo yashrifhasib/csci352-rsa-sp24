@@ -6,7 +6,29 @@
 #include <cstdlib> 
 #include "MRtest.h"
 
+#include <unordered_map>
+
+
 using namespace std;
+
+struct mpz_class_hash {
+    size_t operator()(const mpz_class& x) const {
+        // Convert mpz_class to string and hash the string
+        string str_x = x.get_str();
+        return hash<string>()(str_x);
+    }
+};
+// Custom equality comparison function for mpz_class
+struct mpz_class_equal {
+    bool operator()(const mpz_class& x1, const mpz_class& x2) const {
+        // Compare mpz_class objects
+        return x1 == x2;
+    }
+};
+
+unordered_map<mpz_class, mpz_class, mpz_class_hash, mpz_class_equal> memo;
+
+
 
 mpz_class coprimeGenerator(const mpz_class& n, int maxBit, gmp_randstate_t state){
     mpz_class randomBig;
@@ -20,19 +42,40 @@ mpz_class coprimeGenerator(const mpz_class& n, int maxBit, gmp_randstate_t state
 
 }
 
-mpz_class lucas(const mpz_class& A, const mpz_class& n, const mpz_class& M){
+mpz_class lucas(const mpz_class& A, const mpz_class& M){
+    // Check if the value is already computed and stored in the memo
+    if (memo.find(M) != memo.end()) {
+        return memo[M];
+    }
+    if (M == 0) {
+        return mpz_class(2);
+    }
+    if (M == 1){
+        return A;
+    }
+
     mpz_class status = M%2;
     // V0 = 2, V1=A
     mpz_class mth;
+
     if(status == 0){
-        mpz_class base = lucas(A, n, M / 2);
+        mpz_class base = lucas(A, M / 2);
         mpz_class exp = 2;
-        mpz_powm(mth.get_mpz_t(), base.get_mpz_t(), exp.get_mpz_t(), n.get_mpz_t());
-        mth = (mth+n-2)%n;
-    }else if(status ==1){
+        mpz_pow_ui(mth.get_mpz_t(), base.get_mpz_t(), exp.get_ui());
+
+    }else{
+        mpz_class f1 = (M+1)/2;
+        mpz_class f2 = f1+1;
+        mth = lucas(A,f1)*lucas(A,f2) - A;
 
     }
+
+   memo[M] = mth;
+
+    return mth;
 }
+
+
 mpz_class gcd(const mpz_class& a_, const mpz_class& b_){
 
     mpz_class a = a_;
@@ -90,8 +133,8 @@ void williams(const mpz_class& N, const mpz_class& A){
     while(N!=1 || !MR_Test(N)){
         MCount = M+1;
         M = M*(MCount);
-        Vm = lucas(A, N, M);
-        mpz_class d = gcd(Vm,N);
+        Vm = lucas(A, M);
+        mpz_class d = gcd(Vm-2,N);
 
         if(d!=1 && properFactor(d, M, MCount)){
             cout << "factor:" << d << endl;
@@ -122,8 +165,12 @@ int main() {
 
     //get random number A to be the base.
     mpz_class A = coprimeGenerator(n, 100, state);
-    williams(n, A);
 
+    //williams(n, A);
+    A = 1;
+    for(mpz_class i = 0; i < 10; i++){
+        cout << lucas(A, i);
+    }
 
 
     time(&end); 
