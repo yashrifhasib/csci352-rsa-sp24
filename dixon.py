@@ -5,14 +5,15 @@ from euclid import gcd
 from rsa import prime_factors_of
 from rsa import is_prime
 
-def is_smooth(b, square):
-    if square <= 1:
+def is_smooth(b, number):
+    if number <= 1:
         return False
-    prime_factors = prime_factors_of(square)
-    if prime_factors[-1] <= b:
+    for i in range(2,b):
+        while number % i == 0:
+            number = number//i
+    if number == 1:
         return True
     return False
-
 
 def dixon(n, b):
     z = list()
