@@ -3,6 +3,7 @@ from math import sqrt
 from time import time
 from euclid import gcd
 from rsa import prime_factors_of
+from rsa import is_prime
 
 def is_smooth(b, square):
     if square <= 1:
@@ -102,12 +103,33 @@ def dixon_factorization(n, b):
     return_val = list()
     while n != 1:
         factors = dixon(n, b)
-        n //= factors[0]
-        return_val.append(factors[0])
+        factors_prime = [is_prime(factors[0]), is_prime(factors[1])]
+        if factors_prime[0] and factors_prime[1]:
+            n //= factors[0]
+            n //= factors[1]
+            return_val.append(factors[0])
+            return_val.append(factors[1])
+        elif factors_prime[0]:
+            n //= factors[0]
+            return_val.append(factors[0])
+        elif factors_prime[1]:
+            n //= factors[1]
+            return_val.append(factors[1])
+        else:
+            small = max(factors)
+            factors = dixon(small, b)
+            if is_prime(factors[0]): 
+                n //= factors[0]
+                return_val.append(factors[0])
+            if is_prime(factors[1]): 
+                n //= factors[1]
+                return_val.append(factors[1])
     return return_val
 
-num = 84923
-start_time = time()    
-print(dixon_factorization(num, 7))
+num = 91
+b = 3
+print("The number is " + str(num) + " and B is " + str(b))
+start_time = time()
+print(dixon_factorization(num, b))
 end_time = time()
 print("runtime:", end_time - start_time)
