@@ -63,6 +63,9 @@ def prev_prime(n, test_count=M_R_DEFAULT):
         n -= 2
     return n
 
+def rand_prime(bitcount):
+    return next_prime(randint(pow(2,bitcount-1),prev_prime(pow(2,bitcount)-1)))
+
 def pollard_rho_helper(value, exponent, constant, n):
     var_i = (value**exponent + constant) % n
     return var_i
