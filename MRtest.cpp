@@ -24,9 +24,10 @@ bool MB_failure(const mpz_class& a, const mpz_class& b, const mpz_class&k, const
         return false; 
     }
 
-    for (int i = 0; i < k; ++i) {
-        mpz_class exponent = pow(2,i) *b;
-
+    for (mpz_class i = 0; i < k; ++i) {
+        mpz_class exponent(2); /* store the base in the exponent temporarily*/
+        mpz_powm(exponent.get_mpz_t(), exponent.get_mpz_t(), i.get_mpz_t(), n.get_mpz_t());
+        exponent = exponent * b;
         //bb = mpz_class(a).powm((exponent*b), n);
         mpz_powm(bb.get_mpz_t(), a.get_mpz_t(), exponent.get_mpz_t(), n.get_mpz_t());
 
