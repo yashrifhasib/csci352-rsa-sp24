@@ -6,18 +6,14 @@ void quadratic(mpz_class& input, const mpz_class& mod) {
 }
 
 mpz_class gcd(mpz_class op1, mpz_class op2) {
-    mpz_class temp;
-    if(op1 < op2) {
-        temp = op1;
-        op1 = op2;
-        op2 = temp;
+    if (op1 < op2) {
+        op1.swap(op2);
     }
-    while(!(op2 == 0 || op2 == 1)){
-        temp = op2;
-        op2 = op1 % op2;
-        op1 = temp;
+    while (op2 != 0 && op2 != 1) {
+        op1 = op1 % op2;
+        op1.swap(op2);
     }
-    if(op2 == 1){
+    if (op2 == 1) {
         return op2;
     } else {
         return op1;
