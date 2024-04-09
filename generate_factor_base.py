@@ -1,15 +1,24 @@
 from rsa import next_prime
 
-def create_factor_base(count):
+def euler_criterion(prime, n):
+    number = pow(n,(prime-1)//2,prime)
+    if number == 1:
+        return True
+    return False
+
+def create_factor_base(count, n=9209839122440374002906008377605580208264841025166426304451583112053):
     primes = list()
     primes.append(-1)
     primes.append(2)
     primes.append(3)
-    counter = 4
+    prime = 4
+    loopcount = 0
     while len(primes) < count:
-        prime = next_prime(counter)
-        primes.append(prime)
-        counter = prime + 1
+        loopcount += 1
+        prime = next_prime(prime + 1)
+        if euler_criterion(prime, n):
+            primes.append(prime)
+    print(f"created factor base with {len(primes)} length and searched {loopcount} numbers")
     return primes
 
 def save_list_to_file(myList):
