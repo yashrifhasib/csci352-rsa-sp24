@@ -28,6 +28,13 @@ def save_list_to_file(myList):
             file.write(str(p)+'\n')
     print("wrote to file", name)
 
+def file_to_list(filename):
+    ret = list()
+    with open(filename, mode='r', encoding="utf-8") as file:
+        for line in file:
+            ret.append(int(line))
+    return ret
+
 from sys import argv
 if __name__ == '__main__':
     if len(argv) < 2:
