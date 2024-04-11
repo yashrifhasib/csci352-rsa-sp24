@@ -4,6 +4,9 @@ def is_quadratic_residue(n, p):
     return pow(n , (p - 1)//2, p) == 1
 
 def tonelli_shanks(n, p):
+    if p == 2:
+        return n%2,n%2
+    
     if not is_quadratic_residue(n, p):
         print(f'n:{n} is not a quadratic residue modulo p:{p}')
         return None

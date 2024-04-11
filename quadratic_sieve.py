@@ -4,6 +4,7 @@ import time
 Q = dict()
 def compute_sequence(B,x,N):
     for i in range(20):
+        # Q_i 
         Q[i] = (x+i)**2 - N
     
     
