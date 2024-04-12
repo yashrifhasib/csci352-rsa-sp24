@@ -48,9 +48,9 @@ def legendre(top,bottom):
     elif(top%4 == 3 and bottom%4 == 3):
         return (-1)*legendre(bottom,top)
 
-def create_factor_base(prime_smoothness, n):
+def create_factor_base(prime_smoothness, n) -> list[int]:
     """
-    ### creates factor base file according to naming convention
+    creates factor base list containing no primes above a certain prime in list of all primes
     
     arguments:
 
@@ -75,12 +75,18 @@ def create_factor_base(prime_smoothness, n):
     print(f"created factor base with {factor_base_size} length and searched {prime_count} numbers")
     return factorBase
 
-def save_list_to_file(myList):
-    name = "factor_base_78500th_prime.txt"
-    with open(name, mode='w', encoding="utf-8") as file:
-        for p in myList:
-            file.write(str(p)+'\n')
-    print("wrote to file", name)
+def create_factor_base_from_absolute(absolute_smoothness, n) -> list[int]:
+    """
+    creates factor base according to an absolute smoothness
+
+    arguments:
+
+    absolute_smoothness -- the upper bound for numbers in the factor base
+
+    n -- the number we want to factor
+    """
+    prime_smoothness = highest_prime_order(absolute_smoothness)
+    return create_factor_base(prime_smoothness, n)
 
 def highest_prime_order(max_value):
     """ find the prime below input and returns
@@ -94,18 +100,15 @@ def highest_prime_order(max_value):
         prime = next_prime(prime+1)
     return count
 
-def create_factor_base_from_absolute(absolute_smoothness, n):
-    """
-    ### creates factor base file according to naming convention
-
-    arguments:
-
-    absolute_smoothness -- the upper bound for numbers in the factor base
-
-    n -- the number we want to factor
-    """
-    prime_smoothness = highest_prime_order(absolute_smoothness)
-    return create_factor_base(prime_smoothness, n)
+def save_list_to_file(myList):
+    # TODO re-implement better
+    pass
+    return
+    #name = "factor_base_78500th_prime.txt"
+    with open(name, mode='w', encoding="utf-8") as file:
+        for p in myList:
+            file.write(str(p)+'\n')
+    print("wrote to file", name)
 
 if __name__ == '__main__':
 
