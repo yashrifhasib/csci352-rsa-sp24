@@ -1,4 +1,6 @@
 from rsa import is_prime
+from rsa import next_prime
+from rsa import prev_prime
 import math
 
 # this returns the integer ceiling of the real square root of a number.
@@ -53,8 +55,11 @@ def fermat_factorization(n, start_from=0):
     q = m + j
     return p, q
 
+from time import time
 if __name__ == '__main__':
     n = 9209839122440374002906008377605580208264841025166426304451583112053
-    p, q = fermat_factorization(n, 0)
+    time1 = time()
+    p, q = fermat_factorization(n, 3094352807)
+    print("time spent in seconds:",time() - time1)
     print([p, q])
 
