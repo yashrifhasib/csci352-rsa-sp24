@@ -1,5 +1,6 @@
 from math import ceil
 from math import sqrt
+from math import gcd as pgcd
 from time import time
 from euclid import gcd
 from rsa import prime_factors_of
@@ -127,8 +128,8 @@ def dixon_factorization(n, b):
                 return_val.append(factors[1])
     return return_val
 
-num = 91
-b = 3
+num = 9209839122440374002906008377605580208264841025166426304451583112053
+b = 65537
 print("The number is " + str(num) + " and B is " + str(b))
 start_time = time()
 print(dixon_factorization(num, b))
