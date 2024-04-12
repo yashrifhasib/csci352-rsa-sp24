@@ -1,5 +1,5 @@
-from random import randint
 import math
+from random import randint
 
 M_R_DEFAULT = 5
 
@@ -64,6 +64,11 @@ def prev_prime(n, test_count=M_R_DEFAULT):
     return n
 
 def rand_prime(bitcount):
+    """
+    creates a random prime number of a certain bitsize.
+    
+    bitcount -- the number of bits you want in your prime
+    """
     return next_prime(randint(pow(2,bitcount-1),prev_prime(pow(2,bitcount)-1)))
 
 def pollard_rho_helper(value, exponent, constant, n):
