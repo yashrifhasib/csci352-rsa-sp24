@@ -4,6 +4,7 @@ from pprint import pprint
 from rsa import prime_factors_of as pfo
 from TonelliShanks import tonelli_shanks
 from squarerootAttack import real_sqrt as sqrt
+from euclid import gcd
 
 FACTOR_BASE_FILE = "factor_base_13_new.txt"
 
@@ -31,7 +32,9 @@ def reduce_sieve(sieve: list[int], modulus: int, factorBase: list[int], start_nu
 def give_row_numbers(base_numbers: list[int], sieve: list[int]) -> list[int]:
     """This function takes a reduced sieve base numbers
     and returns the base numbers which are smooth to how
-    the sieve was reduced."""
+    the sieve was reduced.
+    
+    """
     ret = list()
     for entry in zip(base_numbers, sieve):
         if entry[1] == 1:
@@ -40,11 +43,39 @@ def give_row_numbers(base_numbers: list[int], sieve: list[int]) -> list[int]:
 
 def get_relaitons(start_number: int, end_number: int, composite: int, factorBase: list[int]):
     """This is a one call wonder. Creates a sieve between the start and the end
-    with respect to a factor base and a composite number to factor."""
+    with respect to a factor base and a composite number to factor.
+    
+    start_number -- the start of your relation set
+
+    end_number -- maximum of your relation set
+
+    composite -- number you wish to factor
+
+    factorBase -- your factor base
+    """
     base_numbers = list(range(start_number, end_number, 1))
     sieve = [pow(x,2,composite) for x in base_numbers]
     reduce_sieve(sieve, composite, factorBase, start_number)
     return give_row_numbers(base_numbers, sieve)
+
+def mul(my_list) -> int:
+    ret = 1
+    for num in my_list:
+        ret *= num
+    return ret
+
+def relation_combine_factor(relations, n):
+    """
+    This is the last, last part of the quadratic sieve. Take list of relations that
+    corespond to a perfect square, and use it to get a factor out of n.
+    """
+    part1 = mul(relations) % n
+    list2 = list()
+    for val in relations:
+        list2.append(pow(val,2,n))
+    part2 = sqrt(mul(list2))
+    factor1 = gcd(abs(part1 - part2), n)
+    return [factor1, n//factor1]
 
 if __name__ == "__main__":
     factorBase = None
@@ -53,8 +84,8 @@ if __name__ == "__main__":
     # N = 9209839122440374002906008377605580208264841025166426304451583112053
     N = 227179
     
-    start_number = sqrt(N)-100
-    end_number = start_number +1000
+    start_number = sqrt(N)
+    end_number = start_number +300
     relations = get_relaitons(start_number, end_number, N, factorBase)
     
     print("The following is the range of numbers on the left, and the modulus quadratic on the right:")
