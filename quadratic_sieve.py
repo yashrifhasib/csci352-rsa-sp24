@@ -1,6 +1,7 @@
 import time
 from math import log,e
 from pprint import pprint
+from rsa import prime_factors_of as pfo
 from TonelliShanks import tonelli_shanks
 from squarerootAttack import real_sqrt as sqrt
 
@@ -42,11 +43,11 @@ if __name__ == "__main__":
     # N = 9209839122440374002906008377605580208264841025166426304451583112053
     N = 227179
     
-    start_number = sqrt(N)
+    start_number = sqrt(N) + 30
     end_number = start_number + 20
     relations = get_relaitons(start_number, end_number, N, factorBase)
     
-    print("The following is the range of numbers on the left, and the modual quadratic on the right:")
+    print("The following is the range of numbers on the left, and the modulus quadratic on the right:")
     pprint(list(zip(list(range(start_number, end_number, 1)), [pow(x,2,N) for x in list(range(start_number, end_number, 1))])))
     print("The following is the relations we have discovered via sieving:")
-    pprint(relations)
+    pprint(list(zip(relations, [pfo(x) for x in relations])))
