@@ -103,7 +103,7 @@ def create_factor_base(B, n):
     # factorBase.append(3)
     
     i = 0
-    while len(factorBase) < B:
+    while i < B:
         p = primes[i]
         if legendre(n, primes[i])==1:
         # if pow(n,(p-1)//2,p) == 1:
@@ -113,7 +113,7 @@ def create_factor_base(B, n):
     return factorBase
 
 def save_list_to_file(myList):
-    name = "factor_base_" + str(len(myList)) + "_new.txt"
+    name = "factor_base_78500th_prime.txt"
     with open(name, mode='w', encoding="utf-8") as file:
         for p in myList:
             file.write(str(p)+'\n')
@@ -124,11 +124,7 @@ if __name__ == '__main__':
     start_time = time()  
     # n = 227179
     n = 9209839122440374002906008377605580208264841025166426304451583112053
-    B = ceil(pow(math.e, (0.5)*sqrt(log(n)*log(log(n))) ))
-    primes = create_factor_base(B,n)
+    primes = create_factor_base(78500,n)
     save_list_to_file(primes)
-    
-
-
-end_time = time()
-print("runtime:", end_time - start_time)
+    end_time = time()
+    print("runtime:", end_time - start_time)
