@@ -33,18 +33,23 @@ def factor_test(n, factor_function):
     if is_prime(n):
         prime_factors.append(n)
     else:
+        for p in [2,3,5,7,11,13,17,19]:
+            while n%p == 0:
+                n = n // p
+                prime_factors.append(p)
         to_factor.append(n)
     while len(to_factor) > 0:
         smaller_factors = list()
         for x in to_factor: # we factor every number in to_factor
-            new_factors = factor_function(x)
-            if len(new_factors) < 2:
-                print("error, factor did not factor correctly!", new_factors)
-            for new_num in new_factors:
-                if is_prime(new_num):
-                    prime_factors.append(new_num)
-                else:
-                    smaller_factors.insert(0, new_num)
+            if x != 1:
+                new_factors = factor_function(x)
+                #if len(new_factors) < 2:
+                #    print("error, factor did not factor correctly!", new_factors)
+                for new_num in new_factors:
+                    if is_prime(new_num):
+                        prime_factors.append(new_num)
+                    else:
+                        if new_num != max(to_factor):
+                            smaller_factors.insert(0, new_num)
         to_factor = smaller_factors # we change to_factor to numbers that need factoring
-    print(prime_factors)
     return prime_factors
