@@ -1,3 +1,4 @@
 # put directories/files here to ignore so they will not be a part of the repo.
 __pycache__
 *.exe
+*.zzz
