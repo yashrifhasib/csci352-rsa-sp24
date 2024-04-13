@@ -11,7 +11,7 @@ if __name__ == "__main__":
     print("running quadratic sieve on", composite)
     print("calculating our smoothness parameter")
     absolute_smoothness = dickman_rho_best_smoothness(composite)
-    #absolute_smoothness = 40 # we override for our baby number
+    absolute_smoothness = 40 # we override for our baby number
     print("absolute smoothness:",absolute_smoothness)
     print("prime index:", highest_prime_order(absolute_smoothness))
     print("creating our factor base")
