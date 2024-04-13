@@ -108,7 +108,7 @@ def import_matrix(filename):
             ret.append(left_pad_binary_revert(line.strip()))
     return ret
 
-def meataxe_row_reduction(factorBase, composite_number, relations):
+def meataxe_linear_dependance(factorBase, composite_number, relations):
     """
     We do stuff.
 
@@ -150,5 +150,5 @@ if __name__ == '__main__':
     start_number = sqrt(composite)
     end_number = start_number +350
     relations = get_relaitons(start_number, end_number, composite, factorBase)
-    linear_dependant_relations = meataxe_row_reduction(factorBase, composite, relations)
+    linear_dependant_relations = meataxe_linear_dependance(factorBase, composite, relations)
     print(linear_dependant_relations)

@@ -2,7 +2,7 @@ from dickman import dickman_rho_best_smoothness
 from factorBaseRecipricol import create_factor_base_from_absolute, highest_prime_order
 from sieve import relation_combine_factor, get_relaitons
 from squarerootAttack import real_sqrt
-from notMatrix import meataxe_row_reduction
+from notMatrix import meataxe_linear_dependance
 from rsa import rand_prime
 
 if __name__ == "__main__":
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     print("our relations:", relations, sep='\n')
     print("count factorbase:", len(factor_base), "count relations:", len(relations))
     print("finding linear dependance")
-    linear_dependance = meataxe_row_reduction(factor_base, composite, relations)
+    linear_dependance = meataxe_linear_dependance(factor_base, composite, relations)
     print("our relations that are linearly dependant:", linear_dependance, sep='\n')
     print("finishing the job:")
     factors = relation_combine_factor(linear_dependance, composite)
