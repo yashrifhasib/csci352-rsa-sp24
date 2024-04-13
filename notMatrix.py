@@ -49,6 +49,7 @@ def find_linear_dependance(factorBase, composite_number, relations):
         #print(newRep)
     
     # find the set of relations that give us the zero representation
+    linear_relations = []
     for matrix_set in combinations(len(matrix)):
         combination = [matrix[i] for i, bit in enumerate(matrix_set) if bit]
         result = 0

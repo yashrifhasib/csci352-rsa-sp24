@@ -78,6 +78,12 @@ def relation_combine_factor(relations, n):
     factor1 = gcd(abs(part1 - part2), n)
     return [factor1, n//factor1]
 
+def save_relations():
+    raise NotImplementedError()
+
+def load_relations():
+    raise NotImplementedError()
+
 if __name__ == "__main__":
     factorBase = open_factorbase(FACTOR_BASE_FILE)
     # N = 9209839122440374002906008377605580208264841025166426304451583112053

@@ -40,6 +40,7 @@ def dickman_rho_best_smoothness(n):
             smoothness = smoothness**exponent
         smoothness = smoothness ** (1/exponent)
     smoothness = int(smoothness)
+    print("approximate search range:", aproximate_search_range_size(_, n, F))
     return smoothness
 
 
