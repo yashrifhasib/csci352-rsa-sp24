@@ -5,6 +5,7 @@ from rsa import prime_factors_of as pfo
 from TonelliShanks import tonelli_shanks
 from squarerootAttack import real_sqrt as sqrt
 from euclid import gcd
+from factorBaseRecipricol import open_factorbase
 
 FACTOR_BASE_FILE = "factor_base_13_new.txt"
 
@@ -78,9 +79,7 @@ def relation_combine_factor(relations, n):
     return [factor1, n//factor1]
 
 if __name__ == "__main__":
-    factorBase = None
-    with open(FACTOR_BASE_FILE, 'r', encoding='utf-8') as file:
-        factorBase = [int(line) for line in file]
+    factorBase = open_factorbase(FACTOR_BASE_FILE)
     # N = 9209839122440374002906008377605580208264841025166426304451583112053
     N = 227179
     

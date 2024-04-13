@@ -110,6 +110,12 @@ def save_list_to_file(myList):
             file.write(str(p)+'\n')
     print("wrote to file", name)
 
+def open_factorbase(filename):
+    factorBase = None
+    with open(filename, 'r', encoding='utf-8') as file:
+        factorBase = [int(line) for line in file]
+    return factorBase
+
 if __name__ == '__main__':
 
     start_time = time()  
