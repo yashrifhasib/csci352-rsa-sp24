@@ -30,6 +30,12 @@ def dickman_rho_best_smoothness(n):
     This function returns approximately the best possible smoothness parameter in absoulute terms
 
     n -- the number you want to factor
+
+    return values:
+
+    smoothness -- the smoothness
+
+    aprox.search range -- aproximate search range of the optimal smoothness
     """
     F = math.e ** (  math.sqrt(math.log(n) * math.log(math.log(n)) ))
     F = F**(1/2)
@@ -41,8 +47,9 @@ def dickman_rho_best_smoothness(n):
             smoothness = smoothness**exponent
         smoothness = smoothness ** (1/exponent)
     smoothness = int(smoothness)
-    print("approximate search range:", aproximate_search_range_size(_, n, F))
-    return smoothness
+    search_range = aproximate_search_range_size(_, n, F)
+    print("approximate search range:", search_range)
+    return smoothness, search_range
 
 
 
@@ -50,6 +57,6 @@ if __name__ == '__main__':
     n = 9209839122440374002906008377605580208264841025166426304451583112053;
 
     print_dickman_rho_data(n)
-    print("best smoothness:", dickman_rho_best_smoothness(n))
+    print("best smoothness, search range:", dickman_rho_best_smoothness(n))
     
 
