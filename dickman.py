@@ -4,7 +4,8 @@ def rho(i):
     return 1/(i**(i))
 
 def aproximate_search_range_size(smooth, x, F):
-    x = math.sqrt(x);
+    x = math.sqrt(2*x);
+    
     count = rho(math.log(x)/math.log(smooth)) * x
     numsearch = int((1/(count/x))*smooth/(2*math.log(F)))
     return numsearch
