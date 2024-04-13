@@ -101,10 +101,7 @@ def highest_prime_order(max_value):
     return count
 
 def save_list_to_file(myList):
-    # TODO re-implement better
-    pass
-    return
-    #name = "factor_base_78500th_prime.txt"
+    name = "default_name_factor_base.txt"
     with open(name, mode='w', encoding="utf-8") as file:
         for p in myList:
             file.write(str(p)+'\n')
