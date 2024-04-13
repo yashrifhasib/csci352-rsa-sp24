@@ -31,7 +31,7 @@ def new_representation(factorBase, relation, composite):
             result += 2**count
     return binary_list, result
 
-def find_linear_dependance(factorBase, composite_number, relations):
+def n_factorial_linear_dependance(factorBase, composite_number, relations):
     """
     This does a crude version of finding a linear dependance in the matrix.
 
@@ -69,5 +69,5 @@ if __name__ == '__main__':
     start_number = sqrt(composite)
     end_number = start_number +350
     relations = get_relaitons(start_number, end_number, composite, factorBase)
-    linear_dependant_relations = find_linear_dependance(factorBase, composite, relations)
+    linear_dependant_relations = n_factorial_linear_dependance(factorBase, composite, relations)
     print(linear_dependant_relations)
