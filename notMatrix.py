@@ -16,6 +16,17 @@ def combinations(max):
         yield [char == '1' for char in bin(x)[2:]]
 
 def new_representation(factorBase, relation, composite):
+    """
+    This function returns an integer. This integer is the value of a row in a matrix.
+
+    The max size of this integer is pow(2, (len(factorBase))) - 1. This can create the
+    zero vector, or the complete vector, or any possible row configuration.
+
+    parameters:
+        factorBase - list of primes \n
+        relation - a specific number from a relations list. \n
+        composite - the modulus we need to factor.
+    """
     #calculate the related number
     number = pow(relation, 2, composite)
     # initialize our vector
@@ -108,6 +119,36 @@ def import_matrix(filename):
             ret.append(left_pad_binary_revert(line.strip()))
     return ret
 
+def n_factorial_zero_vector_combination(matrix, relations):
+    """
+    O(n!) operation to find a linear dependance to the zero vector from elements in relations.
+
+    - matrix -- list of int representations of rows. see function :py:func:`notMatrix.new_representation`
+
+    - relations -- base numbers. pow(element, 2, modulus) is congruent to a number smooth to our smoothness factor.
+
+    NOTE: each index of matrix needs to corespond to the same index of relations.
+    """
+    linear_relations = []
+    for matrix_set in combinations(len(matrix)):
+        combination = [matrix[i] for i, bit in enumerate(matrix_set) if bit]
+        result = 0
+        # Iterate over the lists in parallel and perform bitwise XOR
+        for number in combination:
+            result = result ^ number
+        if result == 0:
+            #print(combination)
+            linear_relations = [relations[index] for index, x in enumerate(matrix_set) if x]
+            break
+    return linear_relations
+
+def build_matrix(factorBase, relations, composite_number):
+    ret = list()
+    for relation in relations:
+        newRep = new_representation(factorBase, relation, composite_number)
+        ret.append(newRep)
+    return ret
+
 def meataxe_linear_dependance(factorBase, composite_number, relations):
     """
     We do stuff.
@@ -119,10 +160,7 @@ def meataxe_linear_dependance(factorBase, composite_number, relations):
     - relations -- you need to supply a list of relations. These numbers are between sqrt(composite_number) and composite_number.
     """
     # create a 'matrix' of representations of all the relations
-    mymatrix = list()
-    for relation in relations:
-        newRep = new_representation(factorBase, relation, composite_number)
-        mymatrix.append(newRep)
+    mymatrix = build_matrix(factorBase, relations, composite_number)
     export_matrix(mymatrix, len(factorBase), "meataxe/matrix1.txt")
     subprocess.run(["zcv", "meataxe/matrix1.txt", TEMP_MATRIX_FILE])
 
@@ -131,18 +169,7 @@ def meataxe_linear_dependance(factorBase, composite_number, relations):
     subprocess.run(["zpr", TEMP_MATRIX_FILE, "meataxe/matrix2.txt"])
     mymatrix = import_matrix("meataxe/matrix2.txt")
     # find the set of relations that give us the zero representation
-    linear_relations = []
-    for matrix_set in combinations(len(mymatrix)):
-        combination = [mymatrix[i] for i, bit in enumerate(matrix_set) if bit]
-        result = 0
-        # Iterate over the lists in parallel and perform bitwise XOR
-        for number in combination:
-            result = result ^ number
-        if result == 0:
-            #print(combination)
-            linear_relations = [relations[index] for index, x in enumerate(matrix_set) if x]
-            break
-    return linear_relations
+    return n_factorial_zero_vector_combination(mymatrix, relations)
 
 if __name__ == '__main__':
     factorBase = open_factorbase("factor_base_13_new.txt")
