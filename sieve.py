@@ -53,6 +53,9 @@ def get_relaitons(start_number: int, end_number: int, composite: int, factorBase
     composite -- number you wish to factor
 
     factorBase -- your factor base
+
+    Return values:
+    - list[int] : values between start_number and end_number that quadratic modulo are smooth numbers over the factor base
     """
     base_numbers = list(range(start_number, end_number, 1))
     sieve = [pow(x,2,composite) for x in base_numbers]
