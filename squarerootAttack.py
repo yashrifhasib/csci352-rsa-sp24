@@ -5,11 +5,11 @@ import math
 
 # this returns the integer ceiling of the real square root of a number.
 def real_sqrt(n):
-    n_sqrt = math.sqrt(n)
-    if n < 10**8:
-        return math.ceil(n_sqrt)
-    upperBound = int(n_sqrt*1.0001)+1
-    lowerBound = int(n_sqrt*0.9999)-1
+    if n < (1<<40):
+        return math.ceil(math.sqrt(n))
+    hl = len(bin(n)[2:])//2
+    upperBound = int(1 << hl+1)
+    lowerBound = int(1 << hl-1)
     while(upperBound-lowerBound > 1):
         mid = lowerBound + ((upperBound - lowerBound) // 2)
         if mid**2 - n > 0:
