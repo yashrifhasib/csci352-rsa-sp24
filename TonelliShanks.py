@@ -3,12 +3,13 @@ def is_quadratic_residue(n, p):
         return True
     return pow(n , (p - 1)//2, p) == 1
 
-def make_list(n1, n2):
-    if n1 == n2:
-        return [n1]
-    return [n1, n2]
+def make_list(*args):
+    return [x for x in set(args)]
 
 def tonelli_shanks(n, p) -> list[int]:
+    """
+    returns a list of integers, which is iterable.
+    """
     if p == 2:
         return [n%2]
     
