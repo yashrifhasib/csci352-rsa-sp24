@@ -1,19 +1,20 @@
 from pprint import pprint
-from sieve import get_relaitons
+from sieve import get_relaitons, relation_combine_factor
 from rsa import prime_factors_of as pfo
+from rsa import is_prime
 from squarerootAttack import real_sqrt as sqrt
 from factorBaseRecipricol import open_factorbase
 from typing import Generator
 from math import comb
 import subprocess
+from dickman import dickman_rho_best_smoothness
+from factorBaseRecipricol import create_factor_base_from_absolute, highest_prime_order
+from rsa import rand_prime;
+
+
 
 TEMP_MATRIX_FILE = "meataxe/intermediatematrix"
-
-def combinations(max):
-    # if choose_count > max:
-    #     raise ValueError("cannot return a proper value")
-    for x in range(1,pow(2,max)):
-        yield [char == '1' for char in bin(x)[2:]]
+TEMP_MATRIX_FILE_NULL = "meataxe/intermediatematrixNull"
 
 def new_representation(factorBase, relation, composite):
     """
@@ -45,48 +46,18 @@ def new_representation(factorBase, relation, composite):
             number = number // prime
     # binary_list is a row, a pylist of binary. index 0 is -1, index max is the highest prime
     # calc representation
-    string = ""
+    return binary_list
+
+'''    string = ""
     for value in binary_list:
         if value:
             string += '1'
         else:
             string += '0'
-    representation = int(string, base=2)
-    return representation
+    representation = int(string, base=2)'''
 
 
-def n_factorial_linear_dependance(factorBase, composite_number, relations):
-    """
-    # DEPRICATED
-    This does a crude version of finding a linear dependance in the matrix.
-
-    factorBase -- you need to supply factor base list
-
-    composite_number -- you need to supply the number you want factored
-
-    relations -- you need to supply a list of relations. These numbers are between sqrt(composite_number) and composite_number.
-    """
-    # create a 'matrix' of representations of all the relations
-    matrix = list()
-    for relation in relations:
-        newRep = new_representation(factorBase, relation, composite_number)
-        matrix.append(newRep)
-        #print(newRep)
-    
-    # find the set of relations that give us the zero representation
-    linear_relations = []
-    for matrix_set in combinations(len(matrix)):
-        combination = [matrix[i] for i, bit in enumerate(matrix_set) if bit]
-        result = 0
-        # Iterate over the lists in parallel and perform bitwise XOR
-        for number in combination:
-            result = result ^ number
-        if result == 0:
-            #print(combination)
-            linear_relations = [relations[index] for index, x in enumerate(matrix_set) if x]
-            break
-    return linear_relations
-
+'''
 def left_pad_binary(number, length):
     """
 
@@ -117,32 +88,100 @@ def import_matrix(filename):
         header = file.readline()
         for line in file:
             ret.append(left_pad_binary_revert(line.strip()))
-    return ret
+    return ret'''
 
-def n_factorial_zero_vector_combination(matrix, relations):
-    """
-    O(n!) operation to find a linear dependance to the zero vector from elements in relations.
+def export_matrixTXT(matrix, filename):
+    '''
+    output the vectors of our relations(as rows) in matrix forms, where columns is the len(factorBase)
+    -matrix -- the generated matrix to output 
+    -filename -- where the file will be stored 
+    '''
+    with open(filename, 'w', encoding='utf-8') as file:
+        file.write(f"matrix field=2 rows={len(matrix)} cols={len(matrix[0])}\n")
+    # Iterate through each row of the matrix
+    for vector in (matrix):
+        # Convert the vector to a space-separated string
+        vector_text = ' '.join('1' if val else '0' for val in vector)
+        
+        # Write the vector to a file
+        with open(filename, 'a') as file:
+            file.write(vector_text + '\n')
+    #print("Done matrix. Go meataxe, turn binary and then find the null space")
 
-    - matrix -- list of int representations of rows. see function :py:func:`notMatrix.new_representation`
 
-    - relations -- base numbers. pow(element, 2, modulus) is congruent to a number smooth to our smoothness factor.
 
-    NOTE: each index of matrix needs to corespond to the same index of relations.
-    """
-    linear_relations = []
-    for matrix_set in combinations(len(matrix)):
-        combination = [matrix[i] for i, bit in enumerate(matrix_set) if bit]
-        result = 0
-        # Iterate over the lists in parallel and perform bitwise XOR
-        for number in combination:
-            result = result ^ number
-        if result == 0:
-            #print(combination)
-            linear_relations = [relations[index] for index, x in enumerate(matrix_set) if x]
-            break
-    return linear_relations
+def extract_elements(relations, solution):
+    '''
+    it maps relations at all indices of solution set with one and returns this linear dependent set out in a list 
+    - relations -- contains the full list of smooth relations generated for QS
+    - solution -- refers to each row input from the null space (our solution set)
+
+    '''
+
+    if len(relations) != len(solution):
+        raise ValueError(f"relations and index_vector must have the same length{len(relations),len(solution)}")
+
+    elements = []
+    for i in range(len(solution)):
+        if solution[i] == 0:
+            continue
+        entry = relations[i]
+        elements.append(entry)
+
+    return elements
+
+
+def read_matrix_from_file(filename):
+    '''
+    - filename -- stored location of the txt file of null space basis vectors
+    meataxe output matrix in rows of max of 80. If it has over 80 cols, it will be written on the next line
+    '''
+    matrix = list()
+    with open(filename, 'r', encoding='utf-8') as file:
+        # Read the first line to get matrix dimensions
+        line = file.readline().strip()
+        _, field, rows, cols = line.split()
+        rows = int(rows.split('=')[1])
+        cols = int(cols.split('=')[1])
+
+        # Read the remaining lines containing the matrix
+        line = file.readline().strip()
+        for _ in range(rows):
+            row = []
+            count = 0
+            while(count < cols):
+                if(line != ""):
+                    char = line[0]
+                    line = line[1:]
+                    if char.isdigit():
+                        row.append(int(char))
+                        count+=1
+                else:
+                    line = file.readline().strip()
+            matrix.append(row)
+
+    return matrix
+
+def n_zero_vector_combination(nullSpace, relations):
+    """    blank docstring    """    
+    for index_v in nullSpace:
+
+        print(len(index_v), len(relations))
+        linear_dependance = extract_elements(relations, index_v)
+        print(linear_dependance)
+        factors = relation_combine_factor(linear_dependance, composite)
+        condition = len(factors) > 2 or ((factors[0] != 1 and factors[0] != composite) or (factors[1] != 1 and factors[1] != composite))
+        if condition:
+            return linear_dependance, factors
+    return None, None
+            
+
+            
 
 def build_matrix(factorBase, relations, composite_number):
+    '''
+    build matrix with given factorBase and list of smooth relations
+    '''
     ret = list()
     for relation in relations:
         newRep = new_representation(factorBase, relation, composite_number)
@@ -161,21 +200,81 @@ def meataxe_linear_dependance(factorBase, composite_number, relations):
     """
     # create a 'matrix' of representations of all the relations
     mymatrix = build_matrix(factorBase, relations, composite_number)
-    export_matrix(mymatrix, len(factorBase), "meataxe/matrix1.txt")
+    print("-------------")
+    export_matrixTXT(mymatrix, "meataxe/matrix1.txt")
     subprocess.run(["zcv", "meataxe/matrix1.txt", TEMP_MATRIX_FILE])
 
-    # TODO do row reduction
+    subprocess.run(["znu", TEMP_MATRIX_FILE, TEMP_MATRIX_FILE_NULL])
 
-    subprocess.run(["zpr", TEMP_MATRIX_FILE, "meataxe/matrix2.txt"])
-    mymatrix = import_matrix("meataxe/matrix2.txt")
+    subprocess.run(["zpr", TEMP_MATRIX_FILE_NULL, "meataxe/matrix2.txt"])
+    print("-------------")
+
+    mymatrix2 = read_matrix_from_file("meataxe/matrix2.txt")
+    #(len(mymatrix2), len(mymatrix2[0]))
     # find the set of relations that give us the zero representation
-    return n_factorial_zero_vector_combination(mymatrix, relations)
+    print(mymatrix2, relations, len(mymatrix2), len(relations))
+    return n_zero_vector_combination(mymatrix2, relations)
+
+
+def sieve(composite):
+    '''
+    combine all method we have and perform sieve on numbers
+    '''
+    temp_factor = list()
+    while(composite%2 == 0):
+        temp_factor.append(2)
+        composite = composite >> 1
+    print("Composite number",composite)
+    absolute_smoothness, search_range = dickman_rho_best_smoothness(composite)
+    print("absolute smoothness:",absolute_smoothness)
+    factorBase = create_factor_base_from_absolute(absolute_smoothness, composite)
+
+    #factorBase = open_factorbase("factor_base_13_new.txt")
+    relation_start = sqrt(composite)
+    interval = 1_000_000
+    relations = list()
+    while len(relations) < len(factorBase) + 100:
+        relations = relations + get_relaitons(relation_start, relation_start + interval, composite, factorBase)
+        relation_start = relation_start + interval
+        print("relations found:", len(relations))
+    linear_dependant_relations, factors = meataxe_linear_dependance(factorBase, composite, relations)
+    
+    if(factors != None):
+        factors = factors + temp_factor
+        all_prime = all(is_prime(f) for f in factors)
+
+        if (not all_prime):
+            new_factors = list()
+            for f in factors:
+                if(not is_prime(f)):
+                    linear_ind, sub_factors = sieve(f)
+                    if(sub_factors != None):
+                        new_factors.extend(sub_factors)
+                    else: 
+                        new_factors.append(f);
+                    print("Factor composite factor:" + f);
+                else:
+                    new_factors.append(f);
+            factors = new_factors;
+        return linear_dependant_relations, factors
+    else:
+        return linear_dependant_relations,temp_factor
 
 if __name__ == '__main__':
-    factorBase = open_factorbase("factor_base_13_new.txt")
-    composite = 227179
-    start_number = sqrt(composite)
-    end_number = start_number +350
-    relations = get_relaitons(start_number, end_number, composite, factorBase)
-    linear_dependant_relations = meataxe_linear_dependance(factorBase, composite, relations)
-    print(linear_dependant_relations)
+    composite = rand_prime(30)*rand_prime(30)
+    #composite = 2**2**7 + 1
+    print(composite)
+    try:
+        linear_dependant_relations, factors = sieve(composite)
+
+        print("Relation:" , linear_dependant_relations)
+        print("Factor of ",composite," = ", factors)
+        product = 1;
+        for i in range(len(factors)):
+            product *= factors[i]
+
+        print(f"Check if they are the factor: {product == composite}")
+
+    except ValueError as e:
+        print("An error occurred:", e)
+
