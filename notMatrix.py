@@ -96,19 +96,14 @@ def export_matrixTXT(matrix, filename):
     -matrix -- the generated matrix to output 
     -filename -- where the file will be stored 
     '''
+    rows = len(matrix)
+    cols = len(matrix[0])
     with open(filename, 'w', encoding='utf-8') as file:
-        file.write(f"matrix field=2 rows={len(matrix)} cols={len(matrix[0])}\n")
-    # Iterate through each row of the matrix
-    for vector in (matrix):
-        # Convert the vector to a space-separated string
-        vector_text = ' '.join('1' if val else '0' for val in vector)
-        
-        # Write the vector to a file
-        with open(filename, 'a') as file:
+        file.write(f"matrix field=2 rows={rows} cols={cols}\n")
+        for vector in (matrix):
+            # Convert the vector to a space-separated string
+            vector_text = ' '.join('1' if val else '0' for val in vector)
             file.write(vector_text + '\n')
-    #print("Done matrix. Go meataxe, turn binary and then find the null space")
-
-
 
 def extract_elements(relations, solution):
     '''
@@ -130,7 +125,6 @@ def extract_elements(relations, solution):
 
     return elements
 
-
 def read_matrix_from_file(filename):
     '''
     - filename -- stored location of the txt file of null space basis vectors
@@ -143,7 +137,6 @@ def read_matrix_from_file(filename):
         _, field, rows, cols = line.split()
         rows = int(rows.split('=')[1])
         cols = int(cols.split('=')[1])
-
         # Read the remaining lines containing the matrix
         line = file.readline().strip()
         for _ in range(rows):
