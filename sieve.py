@@ -15,7 +15,7 @@ def create_offsets(modulus: int, prime: int, start_number: int) -> list[int]:
     tonelli = tonelli_shanks(modulus, prime)
     offsets = list()
     for t in tonelli:
-        offsets.append((t - start_number)%prime)
+        offsets.append((t - start_number)%prime) # TODO Modify this to get outside range sqrt(N) to sqrt(2n)?
     return offsets
 
 def reduce_sieve(sieve: list[int], modulus: int, factorBase: list[int], start_number: int) -> None:
