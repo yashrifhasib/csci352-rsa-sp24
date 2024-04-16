@@ -29,7 +29,6 @@ struct mpz_class_equal {
 unordered_map<mpz_class, mpz_class, mpz_class_hash, mpz_class_equal> memo;
 
 
-
 mpz_class coprimeGenerator(const mpz_class& n, int maxBit, gmp_randstate_t state){
     mpz_class randomBig;
     while(true){
