@@ -1,6 +1,8 @@
 import math
 from random import randint
 
+from euclid import extended_euclidean
+
 M_R_DEFAULT = 5
 
 def prime_factors_of(number):
@@ -93,3 +95,21 @@ def rsa_encrypt(message, e, n):
 
 def rsa_decrypt(cypher, d, n):
     return pow(cypher, d, n)
+
+def mul(my_list) -> int:
+    ret = 1
+    for num in my_list:
+        ret *= num
+    return ret
+
+def special_function(factors_of_modulus: list[int], exponent, cypher):
+    totient = mul([x-1 for x in factors_of_modulus])
+    coprime = extended_euclidean(totient, exponent)
+    plaintext = rsa_decrypt(cypher, coprime, mul(factors_of_modulus))
+    return plaintext
+
+if __name__ == '__main__':
+    # be sure to enter the prime factors of the modulus
+    modulus_factors = [947]
+    plaintext = special_function(modulus_factors, 5, 2016279054524078341299256251568889523037078816031686455795312148201129)
+    print("The decrypted message is:",plaintext)
