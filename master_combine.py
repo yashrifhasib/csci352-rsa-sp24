@@ -37,12 +37,12 @@ def find_LC(factorBase, composite_number, relations):
         rows = int(rows.split('=')[1])
         cols = int(cols.split('=')[1])
         for _ in range(rows):
-            if(len(temp_null) == row_interval):
+            if(len(temp_null_matrix) == row_interval):
                 set, factor = n_zero_vector_combination(temp_null_matrix,relations)
                 if(set != None):
                     return set,factor
                 #reinitializer
-                temp_null = []
+                temp_null_matrix = []
 
             row = []
             count = 0
@@ -55,7 +55,7 @@ def find_LC(factorBase, composite_number, relations):
                         count+=1
                 else:
                     line = file.readline().strip()
-            temp_null.append(row)
+            temp_null_matrix.append(row)
         return n_zero_vector_combination(temp_null_matrix, relations)
 
 
@@ -78,7 +78,7 @@ def master_read_from_folder(folder, file_pattern):
 if __name__ == '__main__':
     composite = 9209839122440374002906008377605580208264841025166426304451583112053
 
-    all_directory = 'work/0-1599_2000-2399/'
+    all_directory = 'work/0-1599_2000-2399_4600-4900_5200-5900_7000-8000'
     pattern = r'work48763_\d+\.txt'
     #pattern = r'dummyFile.txt'
     master_read_from_folder(all_directory, pattern)
