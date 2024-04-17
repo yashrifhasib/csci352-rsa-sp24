@@ -87,3 +87,9 @@ def pollard_rho(n, x0, y0, fx_constant, fx_exponent=2):
     n //= possible_factors[0]
     possible_factors.append(n)
     return possible_factors
+
+def rsa_encrypt(message, e, n):
+    return pow(message, e, n)
+
+def rsa_decrypt(cypher, d, n):
+    return pow(cypher, d, n)
