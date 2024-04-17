@@ -127,14 +127,15 @@ def modify_first_line(filename, add_rows, cols):
         file.writelines(lines)
 
 
-def export_matrixTXT(matrix, filename):
+def export_matrixTXT(matrix, filename, cols):
     '''
     (updated, do a periodic update to the file. Goal: To find linear independence faster)
     output the vectors of our relations(as rows) in matrix forms, where columns is the len(factorBase)
     -matrix -- the generated matrix to output 
     -filename -- where the file will be stored 
+    -cols size of the matrix
     '''
-    modify_first_line(filename, len(matrix), len(matrix[0]))
+    modify_first_line(filename, len(matrix), cols)
     # Iterate through (new) each row of the matrix
     for vector in (matrix):
         vector_text = ' '.join('1' if val else '0' for val in vector)
@@ -251,15 +252,6 @@ def build_matrix(factorBase, relations, composite_number):
         ret.append(newRep)
     return ret
 
-def meataxe(mymatrix):
-    print("-------------")
-    export_matrixTXT(mymatrix, "meataxe/matrix1.txt")
-    subprocess.run(["zcv", "meataxe/matrix1.txt", TEMP_MATRIX_FILE])
-
-    subprocess.run(["znu", TEMP_MATRIX_FILE, TEMP_MATRIX_FILE_NULL])
-
-    subprocess.run(["zpr", TEMP_MATRIX_FILE_NULL, "meataxe/matrix2.txt"])
-    print("-------------")
 
 
 thread_read_relations = threading.Thread(target= read_relations, args = (RELATION_TXT,))
@@ -277,29 +269,15 @@ def meataxe_linear_dependance(factorBase, composite_number, relations):
     """
     # create a 'matrix' of representations of all the relations
     mymatrix = build_submatrix(factorBase, relations, composite_number)
+    print("-------------")
+    export_matrixTXT(mymatrix, "meataxe/matrix1.txt", len(factorBase))
+    subprocess.run(["zcv", "meataxe/matrix1.txt", TEMP_MATRIX_FILE])
 
-    thread_meataxe_main = threading.Thread(target=meataxe, args = (mymatrix,))
-    thread_meataxe_main.start()
+    subprocess.run(["znu", TEMP_MATRIX_FILE, TEMP_MATRIX_FILE_NULL])
 
-    #thread_read_relations.start()
-    thread_meataxe_main.join()
-    '''
-    thread_read_matrix.start()
-    # Wait for both threads to finish
-    thread_read_relations.join()
-    thread_read_matrix.join()
-
+    subprocess.run(["zpr", TEMP_MATRIX_FILE_NULL, "meataxe/matrix2.txt"])
+    print("-------------")
     
-    #all_relations = getattr(thread_read_relations_output, "output", None)
-    #mymatrix2 = getattr(thread_read_matrix_output, "output", None)
-
-    all_relations = thread_read_relations_output.output
-    mymatrix2 = thread_read_matrix_output.output
-    if(all_relations is None):
-        print(thread_read_relations_output)
-        raise ValueError("Error: 'all_relations' is None.")'''
-    
-
     mymatrix2 = read_matrix_from_file("meataxe/matrix2.txt")
     all_relations = read_relations(RELATION_TXT)
 
