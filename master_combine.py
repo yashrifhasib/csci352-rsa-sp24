@@ -22,14 +22,42 @@ def meataxe(matrix, cols):
 
     subprocess.run(["zpr", TEMP_MATRIX_FILE_NULL, MATRIX2])
     print("-------------")
-
-    mymatrix2 = read_matrix_from_file(MATRIX2)
-    return mymatrix2;
+    return MATRIX2
 
 def find_LC(factorBase, composite_number, relations):
     matrix = build_matrix(factorBase, relations, composite_number)
-    nullspace = meataxe(matrix , len(factorBase))
-    return n_zero_vector_combination(nullspace, relations)
+    matrix2_file = meataxe(matrix , len(factorBase))
+    temp_null_matrix = []
+    row_interval = 1000
+
+    with open(matrix2_file, 'r', encoding='utf-8') as file:
+        # Read the first line to get matrix dimensions
+        line = file.readline().strip()
+        _, field, rows, cols = line.split()
+        rows = int(rows.split('=')[1])
+        cols = int(cols.split('=')[1])
+        for _ in range(rows):
+            if(len(temp_null) == row_interval):
+                set, factor = n_zero_vector_combination(temp_null_matrix,relations)
+                if(set != None):
+                    return set,factor
+                #reinitializer
+                temp_null = []
+
+            row = []
+            count = 0
+            while(count < cols):
+                if(line != ""):
+                    char = line[0]
+                    line = line[1:]
+                    if char.isdigit():
+                        row.append(int(char))
+                        count+=1
+                else:
+                    line = file.readline().strip()
+            temp_null.append(row)
+        return n_zero_vector_combination(temp_null_matrix, relations)
+
 
 
 def master_read_from_folder(folder, file_pattern):
@@ -50,7 +78,7 @@ def master_read_from_folder(folder, file_pattern):
 if __name__ == '__main__':
     composite = 9209839122440374002906008377605580208264841025166426304451583112053
 
-    all_directory = 'work/'
+    all_directory = 'work/0-1599_2000-2399/'
     pattern = r'work48763_\d+\.txt'
     #pattern = r'dummyFile.txt'
     master_read_from_folder(all_directory, pattern)
