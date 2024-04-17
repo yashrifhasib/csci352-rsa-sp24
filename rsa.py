@@ -113,3 +113,6 @@ if __name__ == '__main__':
     modulus_factors = [947]
     plaintext = special_function(modulus_factors, 5, 2016279054524078341299256251568889523037078816031686455795312148201129)
     print("The decrypted message is:",plaintext)
+    from pprint import pprint
+    from string import ascii_lowercase
+    pprint(list(enumerate(' '+ ascii_lowercase)))
