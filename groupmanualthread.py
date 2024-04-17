@@ -22,7 +22,7 @@ if __name__ == '__main__':
     #factor base
     
     absolute_smoothness, _ = dickman_rho_best_smoothness(N)
-    factorBase = create_factor_base_from_absolute(int(absolute_smoothness*.7), N)
+    factorBase = create_factor_base_from_absolute(int(absolute_smoothness), N)
 
     relations = list()
 
