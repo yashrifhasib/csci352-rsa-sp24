@@ -55,11 +55,40 @@ def fermat_factorization(n, start_from=0):
     q = m + j
     return p, q
 
-from time import time
-if __name__ == '__main__':
-    n = 9209839122440374002906008377605580208264841025166426304451583112053
+from math import sqrt
+def demo(n):
     time1 = time()
-    p, q = fermat_factorization(n, 3094352807)
+    print("factoring n =", n)
+    print("m increments, a² = m²-n")
+    n_sqrt = real_sqrt(n)
+    m = n_sqrt
+    a_sqr = pow(m,2) - n
+    a = real_sqrt(a_sqr)
+    try:
+        while pow(a,2) != a_sqr:
+            print(f"m: {m}",f"m²: {a_sqr + n}",f"a²: {m**2 - n}",f"a: {sqrt(m**2 - n)}", sep= '   ')
+            m += 1
+            a_sqr = pow(m,2) - n
+            a = real_sqrt(a_sqr)
+    except KeyboardInterrupt:
+       print("number of numbers tried:",m - n_sqrt - 1)
+       print("max offset:",(m - a) - n_sqrt, "length", len(str((m - a) - n_sqrt)))
+       exit(1)
+    print(f"m: {m}",f"m²: {a_sqr + n}",f"a²: {m**2 - n}",f"a: {sqrt(m**2 - n)}", sep= '   ')
+    p = m - a
+    q = m + a
+    print("(m + a), (m - a):",m-sqrt(m**2 - n),m+sqrt(m**2 - n))
     print("time spent in seconds:",time() - time1)
     print([p, q])
+
+
+from time import time
+from rsa import next_prime as np
+if __name__ == '__main__':
+    # n = 9209839122440374002906008377605580208264841025166426304451583112053
+    # time1 = time()
+    # p, q = fermat_factorization(n, 3094352807)
+    # print("time spent in seconds:",time() - time1)
+    # print([p, q])
+    demo(np(3442)* np(3801))
 
