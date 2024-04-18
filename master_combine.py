@@ -84,14 +84,17 @@ def create_master_file():
 
 def generator_null_combinations(relations, nullspace_file_name) -> list[bool]:
     # MATRIX2  is the nullspace plaintext file
+    print("starting generator_null_combinations")
     with open(MATRIX2, 'r', encoding='utf-8') as file:
         header = file.readline().strip().split()
         rows = int(header[2][5:])
         cols = int(header[3][5:])
+        print("Equality test of length of relations, colunms in nullspace", cols, len(relations), cols == len(relations))
         string = ""
-        for _ in range(ceil(cols/80)):
-            string = string + file.readline().strip()
-        yield [char == '1' for char in string]
+        for __ in range(rows):
+            for _ in range(ceil(cols/80)):
+                string = string + file.readline().strip()
+            yield [char == '1' for char in string]
 
 def generate_my_matrix(matrix, factorBase, relations, composite):
     with open(matrix, 'w', encoding='utf-8') as file:
@@ -107,13 +110,19 @@ def generate_my_matrix(matrix, factorBase, relations, composite):
 
 def matthew_main():
     composite = 9209839122440374002906008377605580208264841025166426304451583112053
+
+    """This section creates the concatenated file"""
     create_master_file()
     print("master file created")
     absolute_smoothness, _ = dickman_rho_best_smoothness(composite)
     factorBase = create_factor_base_from_absolute(int(absolute_smoothness*.7), composite)
+
+
     print("factor base created")
     #calculate relations matrix
     relations = read_relations(MASTER_FILE)
+
+    """This section does the expensive matrix creation, matrix nullspace finding, and matrix converstion back to python-compatable."""
     print("relations recieved from master file")
     print("generating relations X factorbase matrix")
     # MATRIX1 is the relations X factorbase file
@@ -125,41 +134,21 @@ def matthew_main():
     print("exporting from meataxe to text")
     subprocess.run(["zpr", TEMP_MATRIX_FILE_NULL, MATRIX2])
     print("finished finding nullspace")
-    # generate linear relations
-    # MATRIX2 is the nullspace text file in respect to MATRIX1
+
+
+    print("generating linear relations:")
+    """MATRIX2 is the nullspace text file in respect to MATRIX1"""
     for linearRelation in generator_null_combinations(relations, MATRIX2):
-        #test linearRelation
-        #TODO test relations, when factored print
-        subset = [relations[i] for i in range(relations) if linearRelation[i]]
+        """test linearRelation
+        TODO test relations, when factored print"""
+        subset = [relations[i] for i in range(len(relations)) if linearRelation[i]]
+        print("Length of current subset:",len(subset))
         factors = relation_combine_factor(subset, composite)
         if composite not in factors:
             break
     print("factors are:",factors)
 
 if __name__ == '__main__':
-    composite = 9209839122440374002906008377605580208264841025166426304451583112053
-
-    all_directory = 'work/0-1599_2000-2399_4600-4900_5200-5900_7000-8000'
-    pattern = r'work48763_\d+\.txt'
-    #pattern = r'dummyFile.txt'
-    master_read_from_folder(all_directory, pattern)
-    relations = read_relations(MASTER_FILE)
-
-    absolute_smoothness, _ = dickman_rho_best_smoothness(composite)
-    factorBase = create_factor_base_from_absolute(int(absolute_smoothness*.7), composite)
-
-    linear_dependant_relations, factors = find_LC(factorBase, composite, relations)
-
-    if(factors != None):
-        print("Relation:" , linear_dependant_relations)
-        print("Factor of ",composite," = ", factors)
-        product = 1;
-        for i in range(len(factors)):
-            product *= factors[i]
-
-        print(f"Check if they are the factor: {product == composite}")
-    else:
-        print("No solution found.")
-
+    matthew_main()
     
     

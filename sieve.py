@@ -1,5 +1,6 @@
 import time
 from math import log,e
+from gmpy2 import isqrt, mpz
 from pprint import pprint
 from rsa import prime_factors_of as pfo
 from TonelliShanks import tonelli_shanks
@@ -74,11 +75,15 @@ def relation_combine_factor(relations, n):
     corespond to a perfect square, and use it to get a factor out of n.
     """
     part1 = mul(relations) % n
+    print("mul1 done")
     list2 = list()
     for val in relations:
         list2.append(pow(val,2,n))
-    part2 = sqrt(mul(list2))
+    print("list2 created")
+    part2 = isqrt(mpz(mul(list2)))
+    print("part2 done")
     factor1 = gcd(abs(part1 - part2), n)
+    print("gcd complete")
     return [factor1, n//factor1]
 
 def save_relations():
