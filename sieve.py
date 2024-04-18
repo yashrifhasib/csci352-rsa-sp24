@@ -98,7 +98,7 @@ if __name__ == "__main__":
     N = 227179
     
     start_number = sqrt(N)
-    end_number = start_number +300
+    end_number = sqrt(2*N)
     relations = get_relaitons(start_number, end_number, N, factorBase)
     
     print("The following is the range of numbers on the left, and the modulus quadratic on the right:")
