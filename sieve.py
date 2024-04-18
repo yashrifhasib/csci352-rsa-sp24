@@ -1,6 +1,7 @@
 import time
 from math import log,e
-from gmpy2 import isqrt, mpz
+#from gmpy2 import isqrt, mpz
+from math import isqrt
 from pprint import pprint
 from rsa import prime_factors_of as pfo
 from TonelliShanks import tonelli_shanks
@@ -80,7 +81,7 @@ def relation_combine_factor(relations, n):
     for val in relations:
         list2.append(pow(val,2,n))
     print("list2 created")
-    part2 = isqrt(mpz(mul(list2)))
+    part2 = isqrt((mul(list2)))# gmpy2 removed
     print("part2 done")
     factor1 = gcd(abs(part1 - part2), n)
     print("gcd complete")
