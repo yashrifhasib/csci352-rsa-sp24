@@ -101,6 +101,7 @@ if __name__ == "__main__":
     end_number = sqrt(2*N)
     relations = get_relaitons(start_number, end_number, N, factorBase)
     
+    print("Number we're sieving", N)
     print("The following is the range of numbers on the left, and the modulus quadratic on the right:")
     pprint(list(zip(list(range(start_number, end_number, 1)), [pow(x,2,N) for x in list(range(start_number, end_number, 1))])))
     print("The following is the relations we have discovered via sieving:")
