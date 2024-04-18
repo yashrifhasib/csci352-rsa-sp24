@@ -84,7 +84,7 @@ def relation_combine_factor(relations, n):
     print("part2 done")
     factor1 = gcd(abs(part1 - part2), n)
     print("gcd complete")
-    return [factor1, n//factor1]
+    return [int(factor1), int(n//factor1)]
 
 def save_relations():
     raise NotImplementedError()
